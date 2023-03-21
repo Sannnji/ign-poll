@@ -1,24 +1,43 @@
 import express from 'express';
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
 import Poll from './models/Poll.js';
 
-mongoose
-  .connect('mongodb://127.0.0.1:27017/test')
-  .then(() => console.log('MongoDB Connected'));
-
+// Initialize express
 const app = express();
-
 app.use(express.json());
 
-app.get('/poll', async (req, res) => {
-  const poll = await Poll.find();
+// Connect to MongoDB
+mongoose
+  .connect('mongodb://localhost/mongoose-watch')
+  .catch((err) => {
+    console.error(err.stack);
+    process.exit(1);
+  })
+  .then(() => {
+    console.log('MongoDB Connected');
+    app.listen(8080, () => console.log('Server is running on localhost:8080'));
+  });
 
-  res.status(200).json(poll);
+// Create change stream
+Poll.watch().on('change', (data) => {
+  console.log(data);
 });
 
+// Get all polls
+app.get('/poll', async (req, res) => {
+  try {
+    const poll = await Poll.find();
+
+    res.status(200).json(poll);
+  } catch (err) {
+    res.status(200).json({ error: err });
+  }
+});
+
+// Add poll
 app.post('/poll/add', async (req, res) => {
-  const newPoll = await new Poll({
+  const response = await new Poll({
     name: req.body.name,
     options: req.body.options,
   });
@@ -31,32 +50,31 @@ app.post('/poll/add', async (req, res) => {
   res.status(200).json(newPoll);
 });
 
+// Update poll
 app.post('/poll/update', async (req, res) => {
   const pollId = req.body.id;
   const change = req.body.change;
 
   try {
-    await Poll.findOneAndUpdate(
-      { _id: pollId },
-      { options: [{ name: 'Leopard', count: 1 }] }
-    );
+    const response = await Poll.findOneAndUpdate({ _id: pollId }, change);
+    if (response === null) throw 'An error occurred';
+    res.status(200).json({ message: 'Update successful' });
   } catch (err) {
-    res.status(200).json({ message: 'failed' });
-    console.log(err);
+    res.status(200).json({ error: err });
   }
-
-  // res.status(200).json()
-  res.status(200).json({ message: 'Successfull' });
 });
 
+// Delete poll
 app.delete('/poll/delete', async (req, res) => {
-  const newPoll = await Poll.findByIdAndDelete(req.body.id);
+  try {
+    const response = await Poll.findByIdAndDelete(req.body.id);
 
-  if (newPoll == null) {
-    console.log(null);
+    if (response === null) {
+      throw 'Poll could not be found. Deletion failed.';
+    }
+
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(500).json({ error: err });
   }
-
-  res.status(200).json(newPoll);
 });
-
-app.listen(8080, () => console.log('Server is running on localhost:8080'));
