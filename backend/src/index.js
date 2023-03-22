@@ -1,10 +1,12 @@
 import express from 'express';
+import cors from 'cors';
 import mongoose from 'mongoose';
 
 import Poll from './models/Poll.js';
 
 // Initialize express
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
