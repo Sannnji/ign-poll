@@ -44,12 +44,12 @@ app.post('/poll/add', async (req, res) => {
     options: req.body.options,
   });
 
-  newPoll
+  response
     .save()
     .catch((err) => console.error(err))
     .then((poll) => console.log(poll));
 
-  res.status(200).json(newPoll);
+  res.status(200).json(response);
 });
 
 // Update poll
