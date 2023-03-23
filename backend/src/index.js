@@ -21,11 +21,6 @@ mongoose
     app.listen(8080, () => console.log('Server is running on localhost:8080'));
   });
 
-// Create change stream
-Poll.watch().on('change', (data) => {
-  console.log(data);
-});
-
 // Get all polls
 app.get('/poll', async (req, res) => {
   try {
