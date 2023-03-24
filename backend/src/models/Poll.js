@@ -7,8 +7,15 @@ const PollSchema = new Schema({
   },
   options: [
     {
-      name: String,
-      count: Number,
+      _id: false,
+      name: {
+        type: String,
+        required: true,
+      },
+      count: {
+        type: Number,
+        required: true,
+      },
     },
   ],
 });
