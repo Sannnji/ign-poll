@@ -4,13 +4,19 @@ import { useQuery } from 'react-query';
 import Poll from './components/Poll';
 
 function App() {
-  const fetchPolls = () => {
-    return axios.get('http://localhost:8080/poll');
-  };
-
   // Poll data every 2 seconds
-  const { isLoading, isError, data, error } = useQuery('polls', fetchPolls, {
-    refetchInterval: 2000,
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: 'poll',
+    queryFn: async () => {
+      const res = await axios.get(
+        'http://localhost:8080/polls/641dcf17a7b2a9a729fbe4cc'
+      );
+      return res;
+    },
+    refetchInterval: 1000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   if (isLoading) {
@@ -23,10 +29,8 @@ function App() {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="w-[65%]">
-        {data.data.map((poll) => (
-          <Poll poll={poll} />
-        ))}
+      <div className="w-[90%] md:w-[65%]">
+        <Poll poll={data.data} />
       </div>
     </div>
   );
