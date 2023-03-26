@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 import Poll from './models/Poll.js';
+import PollList from './models/PollsList.js';
 
 // Initialize express
 const app = express();
@@ -21,56 +22,115 @@ mongoose
     app.listen(8080, () => console.log('Server is running on localhost:8080'));
   });
 
-// Get all polls
-app.get('/poll', async (req, res) => {
+// GET list of polls
+app.get('/polls', async (req, res) => {
   try {
-    const poll = await Poll.find();
+    const pollList = await PollList.find();
 
-    res.status(200).json(poll);
+    res.status(200).json(pollList);
   } catch (err) {
-    res.status(200).json({ error: err });
+    res.status(500).json({ error: err });
   }
 });
 
-// Add poll
+// GET single poll
+app.get('/polls/:pollId', async (req, res) => {
+  try {
+    const response = await Poll.findById(req.params.pollId);
+
+    if (response === null) throw 'An error occured. Could not GET poll.';
+
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
+
+// ADD poll && add it to poll list
 app.post('/poll/add', async (req, res) => {
-  const response = await new Poll({
+  const addPoll = await new Poll({
     name: req.body.name,
     options: req.body.options,
   });
 
-  response
-    .save()
-    .catch((err) => console.error(err))
-    .then((poll) => console.log(poll));
+  const addPollToList = await new PollList({
+    _id: addPoll._id.toString(),
+    name: req.body.name,
+    url: `localhost:8080/polls/${addPoll._id.toString()}`,
+  });
 
-  res.status(200).json(response);
+  // Validate before save
+  try {
+    const error = addPoll.validateSync();
+
+    if (error) {
+      const errorArr = Object.getOwnPropertyNames(error.errors);
+      const numOfErrors = Object.getOwnPropertyNames(error.errors).length;
+      let missingFields = '';
+
+      for (let i = 0; i < numOfErrors; i++) {
+        missingFields += errorArr[i] + ' ';
+      }
+
+      throw `Fields ${errorArr} are required`;
+    }
+
+    addPoll.save();
+    addPollToList.save();
+
+    res.status(200).json({ message: 'Poll successfully added', poll: addPoll });
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
 });
 
 // Update poll
 app.post('/poll/update', async (req, res) => {
   const pollId = req.body.id;
   const change = req.body.change;
+  const changeType = Object.getOwnPropertyNames(change)[0];
 
   try {
-    const response = await Poll.findOneAndUpdate({ _id: pollId }, change);
-    if (response === null) throw 'An error occurred';
+    const findPollById = await Poll.findById(pollId);
+    const findPollListById = await PollList.findById(pollId);
+
+    // Throw error if query returns null
+    if (findPollById === null && findPollListById === null) {
+      throw 'Update failed. Poll could not be found.';
+    } else {
+      // If updating name, update name in poll and poll list
+      if (changeType === 'name') {
+        await Poll.findByIdAndUpdate(pollId, change);
+        await PollList.findByIdAndUpdate(pollId, change);
+        // Increment Vote by 1
+      } else if (changeType === 'vote') {
+        await Poll.findOneAndUpdate(
+          { _id: pollId, 'options.name': change.vote.for },
+          { $inc: { 'options.$.count': 1 } }
+        );
+      } else {
+        await Poll.findOneAndUpdate({ _id: pollId }, change);
+      }
+    }
+
     res.status(200).json({ message: 'Update successful' });
   } catch (err) {
-    res.status(200).json({ error: err });
+    res.status(404).json({ error: err });
   }
 });
 
 // Delete poll
 app.delete('/poll/delete', async (req, res) => {
   try {
-    const response = await Poll.findByIdAndDelete(req.body.id);
+    const findPollAndDelete = await Poll.findByIdAndDelete(req.body.id);
+    const findPollInListAndDelete = await PollList.findByIdAndDelete(
+      req.body.id
+    );
 
-    if (response === null) {
-      throw 'Poll could not be found. Deletion failed.';
-    }
+    if (findPollInListAndDelete === null || findPollAndDelete === null)
+      throw 'Deletion failed. Poll could not be found.';
 
-    res.status(200).json(response);
+    res.status(200).json({ message: 'Delete successful' });
   } catch (err) {
     res.status(500).json({ error: err });
   }
