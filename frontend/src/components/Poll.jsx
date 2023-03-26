@@ -1,40 +1,125 @@
-import React from 'react';
+import { useState } from 'react';
+import axios from 'axios';
+import { useMutation } from 'react-query';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+
+import PollOptions from './PollOptions';
+import MessageModal from './MessageModal';
 
 export default function Poll({ poll }) {
+  const [selectedOption, setselectedOption] = useState();
+  const [hasVoted, setHasVoted] = useState(
+    localStorage.getItem('vote') === null ? false : true
+  );
+  const [seeResults, setSeeResults] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const mutation = useMutation({
+    mutationFn: async (vote) => {
+      const res = axios.post('http://localhost:8080/poll/update', vote);
+      return res;
+    },
+  });
+
+  // Calculate the total amount of votes
+  const totalVoteCount = () => {
+    let count = 0;
+    poll.options.forEach((option) => {
+      count += option.count;
+    });
+    return count;
+  };
+
   return (
     <div
-      key={poll.name}
-      className="flex flex-col border rounded-xl p-6 bg-[#283044] text-white"
+      key={poll._id}
+      className="flex flex-col rounded-xl p-6 bg-[#283044] text-white"
     >
+      {/* Poll Title */}
       <h1 className="font-bold text-4xl">{poll.name}</h1>
-      <hr className="my-2 border-[#59626F]" />
+      <hr className="mt-4 border-[#59626F]" />
 
-      <fieldset>
-        {poll.options.map((option) => (
-          <label
-            key={option.name}
-            className="poll-container"
-            htmlFor={option.name}
-          >
-            {option.name}
-            <input
-              id={option.name}
-              className="form-radio"
-              type="radio"
-              name="status"
-            />
-            <span className="checkmark" />
-          </label>
-        ))}
-      </fieldset>
+      {/* Poll Options */}
+      <PollOptions
+        hasVoted={hasVoted}
+        totalVoteCount={() => totalVoteCount()}
+        seeResults={seeResults}
+        selectedOption={selectedOption}
+        setSelectedOption={setselectedOption}
+        options={poll.options}
+      />
 
-      <div className="flex w-full justify-between items-center mt-6">
-        <button className="rounded-xl font-bold bg-white text-black py-2 px-14">
-          Answer
-        </button>
+      {/* Form Buttons */}
+      <div className="flex w-full justify-between items-center">
+        {!hasVoted ? (
+          <>
+            <button
+              className={`${
+                seeResults ? 'bg-slate-500 text-white' : 'bg-white text-black'
+              }  font-bold text-lg py-2 w-60 rounded-xl`}
+              disabled={seeResults}
+              onClick={() => {
+                if (selectedOption) {
+                  mutation.mutate({
+                    id: poll._id,
+                    change: {
+                      vote: {
+                        for: selectedOption,
+                      },
+                    },
+                  });
+                  localStorage.setItem("vote", selectedOption)
+                  setTimeout(() => {
+                    setHasVoted(true);
+                  }, 1200);
+                } else {
+                  setIsOpen(true);
+                }
+              }}
+            >
+              Answer
+            </button>
 
-        <button>See Result {'>'}</button>
+            {/* If user clicks show results */}
+            {seeResults ? (
+              <button
+                className="flex items-center space-x-1"
+                onClick={() => {
+                  setSeeResults(false);
+                }}
+              >
+                <ChevronLeftIcon className="w-6 h-6" />
+                <p>Go Back</p>
+              </button>
+            ) : (
+              <button
+                className="flex items-center space-x-1"
+                onClick={() => {
+                  setSeeResults(true);
+                }}
+              >
+                <p>See Result</p>
+                <ChevronRightIcon className="w-6 h-6" />
+              </button>
+            )}
+          </>
+        ) : (
+          // Display if vote is submitted 
+          <>
+            <p>Thanks for participating 🎉</p>
+            <p>{totalVoteCount()} votes</p>
+          </>
+        )}
       </div>
+
+      {/* Display modal if user tries to submit without selecting an option */}
+      <MessageModal
+        title={'Error'}
+        message={'Please select an option before submitting your vote'}
+        buttonLabel={'Exit'}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
     </div>
   );
 }
