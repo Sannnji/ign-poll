@@ -1,0 +1,22 @@
+@-webkit-keyframes percent-bar {
+  0% {
+    width: 0;
+  }
+}
+@-moz-keyframes percent-bar {
+  0% {
+    width: 0;
+  }
+}
+
+@keyframes percent-bar {
+  0% {
+    width: 0;
+  }
+}
+
+.percent-bar {
+  -webkit-animation: percent-bar 2s;
+  -moz-animation: percent-bar 2s;
+  animation: percent-bar 2s;
+}
