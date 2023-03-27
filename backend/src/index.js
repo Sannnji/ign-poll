@@ -31,7 +31,7 @@ async function addTestData() {
   if (sum === null) {
     Poll.create({
       _id: '6421d86ad6ffa14511eff229',
-      name: 'Who is the best manga villian',
+      name: 'Who is the best manga villian?',
       options: [
         {
           name: 'Madara',
@@ -50,7 +50,7 @@ async function addTestData() {
 
     PollList.create({
       _id: '6421d86ad6ffa14511eff229',
-      name: 'Who is the best manga villian',
+      name: 'Who is the best manga villian?',
       url: 'localhost:8080/polls/6421d86ad6ffa14511eff229',
     });
   }
