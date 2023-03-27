@@ -33,7 +33,7 @@ export default function Poll({ poll }) {
   return (
     <div
       key={poll._id}
-      className="flex flex-col rounded-xl p-6 bg-[#283044] text-white"
+      className="flex flex-col rounded-2xl p-8 bg-[#283044] text-white shadow-2xl"
     >
       {/* Poll Title */}
       <h1 className="font-bold text-4xl">{poll.name}</h1>
