@@ -22,6 +22,33 @@ mongoose
     app.listen(8080, () => console.log('Server is running on localhost:8080'));
   });
 
+if (Poll.findById('6421d86ad6ffa14511eff229') === null) {
+  Poll.create({
+    _id: '6421d86ad6ffa14511eff229',
+    name: 'Who is the best manga villian',
+    options: [
+      {
+        name: 'Madara',
+        count: 0,
+      },
+      {
+        name: 'Sukuna',
+        count: 0,
+      },
+      {
+        name: 'Black Beard',
+        count: 0,
+      },
+    ],
+  });
+
+  PollList.create({
+    _id: '6421d86ad6ffa14511eff229',
+    name: 'Who is the best manga villian',
+    url: 'localhost:8080/polls/6421d86ad6ffa14511eff229',
+  });
+}
+
 // GET list of polls
 app.get('/polls', async (req, res) => {
   try {
@@ -49,6 +76,7 @@ app.get('/polls/:pollId', async (req, res) => {
 // ADD poll && add it to poll list
 app.post('/poll/add', async (req, res) => {
   const addPoll = await new Poll({
+    _id: new mongoose.mongo.ObjectId(req.body._id),
     name: req.body.name,
     options: req.body.options,
   });
