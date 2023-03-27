@@ -9,7 +9,7 @@ function App() {
     queryKey: 'poll',
     queryFn: async () => {
       const res = await axios.get(
-        'http://localhost:8080/polls/641dcf17a7b2a9a729fbe4cc'
+        'http://localhost:8080/polls/6421d86ad6ffa14511eff229'
       );
       return res;
     },
