@@ -12,7 +12,7 @@ app.use(express.json());
 
 // Connect to MongoDB
 mongoose
-  .connect('mongodb://localhost/mongoose-watch')
+  .connect('mongodb://localhost:27017')
   .catch((err) => {
     console.error(err.stack);
     process.exit(1);
@@ -22,32 +22,40 @@ mongoose
     app.listen(8080, () => console.log('Server is running on localhost:8080'));
   });
 
-if (Poll.findById('6421d86ad6ffa14511eff229') === null) {
-  Poll.create({
-    _id: '6421d86ad6ffa14511eff229',
-    name: 'Who is the best manga villian',
-    options: [
-      {
-        name: 'Madara',
-        count: 0,
-      },
-      {
-        name: 'Sukuna',
-        count: 0,
-      },
-      {
-        name: 'Black Beard',
-        count: 0,
-      },
-    ],
-  });
+// Add test data to server
+async function addTestData() {
+  const sum = await Poll.findById('6421d86ad6ffa14511eff229').catch((err) =>
+    console.log(err)
+  );
 
-  PollList.create({
-    _id: '6421d86ad6ffa14511eff229',
-    name: 'Who is the best manga villian',
-    url: 'localhost:8080/polls/6421d86ad6ffa14511eff229',
-  });
+  if (sum === null) {
+    Poll.create({
+      _id: '6421d86ad6ffa14511eff229',
+      name: 'Who is the best manga villian',
+      options: [
+        {
+          name: 'Madara',
+          count: 1000,
+        },
+        {
+          name: 'Sukuna',
+          count: 666,
+        },
+        {
+          name: 'Black Beard',
+          count: 620,
+        },
+      ],
+    });
+
+    PollList.create({
+      _id: '6421d86ad6ffa14511eff229',
+      name: 'Who is the best manga villian',
+      url: 'localhost:8080/polls/6421d86ad6ffa14511eff229',
+    });
+  }
 }
+addTestData();
 
 // GET list of polls
 app.get('/polls', async (req, res) => {
