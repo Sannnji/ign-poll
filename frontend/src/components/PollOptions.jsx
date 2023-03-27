@@ -90,7 +90,7 @@ export default function PollOptions({
 
           {/* Percentage */}
           {hasVoted || seeResults ? (
-            <p className="font-bold text-xl min-w-[68px] text-right">
+            <p className="font-bold text-xl min-w-[115px] text-right">
               <CountUp
                 end={calcVotePercent(option.count, totalVoteCount)}
                 duration={1}
