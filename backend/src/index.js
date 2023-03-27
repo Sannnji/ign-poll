@@ -31,19 +31,23 @@ async function addTestData() {
   if (sum === null) {
     Poll.create({
       _id: '6421d86ad6ffa14511eff229',
-      name: 'Who is the best manga villian?',
+      name: 'Which class should be added for Diablo 4 DLC?',
       options: [
         {
-          name: 'Madara',
-          count: 1000,
+          name: 'Paladin',
+          count: 1340,
         },
         {
-          name: 'Sukuna',
-          count: 666,
+          name: 'Witch Doctor',
+          count: 0,
         },
         {
-          name: 'Black Beard',
-          count: 620,
+          name: 'Monk',
+          count: 0,
+        },
+        {
+          name: 'Other - tell us in the comments',
+          count: 0,
         },
       ],
     });
