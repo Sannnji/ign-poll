@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 const PollSchema = new Schema({
+  _id: mongoose.Schema.Types.ObjectId,
   name: {
     type: String,
     required: true,
