@@ -33,10 +33,10 @@ export default function Poll({ poll }) {
   return (
     <div
       key={poll._id}
-      className="flex flex-col rounded-2xl p-8 bg-[#283044] text-white shadow-2xl"
+      className="flex flex-col rounded-2xl p-7 bg-[#283044] text-white shadow-2xl"
     >
       {/* Poll Title */}
-      <h1 className="font-bold text-4xl">{poll.name}</h1>
+      <h1 className="font-bold text-3xl md:text-4xl">{poll.name}</h1>
       <hr className="mt-4 border-[#59626F]" />
 
       {/* Poll Options */}
@@ -56,7 +56,7 @@ export default function Poll({ poll }) {
             <button
               className={`${
                 seeResults ? 'bg-slate-500 text-white' : 'bg-white text-black'
-              }  font-bold text-lg py-2 w-60 rounded-xl`}
+              }  font-bold text-lg py-2 min-w-[126px] sm:w-60 rounded-xl`}
               disabled={seeResults}
               onClick={() => {
                 if (selectedOption) {
@@ -106,7 +106,7 @@ export default function Poll({ poll }) {
         ) : (
           // Display if vote is submitted 
           <>
-            <p>Thanks for participating 🎉</p>
+            <p>Thanks you 🎉</p>
             <p>{totalVoteCount()} votes</p>
           </>
         )}

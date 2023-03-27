@@ -44,11 +44,13 @@ export default function PollOptions({
             }
           }}
         >
-          <div className="flex items-center space-x-5 w-full">
+          <div className="flex items-center  w-full">
             {/* Radio Button */}
             <div
-              className={`absolute border-[2.5px] w-8 h-8 rounded-full ${
-                hasVoted || seeResults ? 'border-slate-500 bg-slate-500' : 'border-white'
+              className={`absolute border-[2.5px] w-7 h-7 rounded-full ${
+                hasVoted || seeResults
+                  ? 'border-slate-500 bg-slate-500'
+                  : 'border-white'
               }`}
             >
               {selectedOption === option.name ? (
@@ -63,15 +65,17 @@ export default function PollOptions({
               ) : null}
             </div>
 
-            <div className="relative w-full pl-8">
+            {/* Option Name && Percentage Bar */}
+            <div className="relative w-full pl-11">
               {/* Option Name */}
               <p
-                className={`text-lg ${
+                className={`text-base sm:text-lg ${
                   hasVoted || seeResults ? 'text-slate-500' : 'text-white'
                 } `}
               >
                 {option.name}
               </p>
+
               {/* Percentage Bar */}
               {hasVoted || seeResults ? (
                 <div
@@ -86,19 +90,19 @@ export default function PollOptions({
                 />
               ) : null}
             </div>
-          </div>
 
-          {/* Percentage */}
-          {hasVoted || seeResults ? (
-            <p className="font-bold text-xl min-w-[115px] text-right">
-              <CountUp
-                end={calcVotePercent(option.count, totalVoteCount)}
-                duration={1}
-                decimals={1}
-              />
-              %
-            </p>
-          ) : null}
+            {/* Percentage Display */}
+            {hasVoted || seeResults ? (
+              <p className="font-bold text-xl text-right">
+                <CountUp
+                  end={calcVotePercent(option.count, totalVoteCount)}
+                  duration={1}
+                  decimals={1}
+                />
+                %
+              </p>
+            ) : null}
+          </div>
         </div>
       ))}
     </fieldset>
