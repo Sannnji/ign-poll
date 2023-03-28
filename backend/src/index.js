@@ -35,15 +35,15 @@ async function addTestData() {
       options: [
         {
           name: 'Paladin',
-          count: 1000,
+          count: 1320,
         },
         {
           name: 'Witch Doctor',
-          count: 666,
+          count: 440,
         },
         {
           name: 'Monk',
-          count: 620,
+          count: 823,
         },
         {
           name: 'Other - tell us in the comments',
