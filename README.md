@@ -40,8 +40,8 @@ and modify the connection string in "backend/src/index.js" as needed
 
 <br>
 
-```zsh
-// run to start backend && frontend
+```bash
+// run within the respective dir to start backend || frontend
 ➜ ~ yarn start
 // or
 ➜ ~ npm start
@@ -50,6 +50,6 @@ and modify the connection string in "backend/src/index.js" as needed
 <br>
 
 ```zsh
-// run to start docker container for MongoDB
+// run at root dir to start docker MongoDB container
 ➜ ~ docker-compose up -d 
 ```
