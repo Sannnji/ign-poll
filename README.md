@@ -1,3 +1,4 @@
+<br>
 <div align="center">
 <p align="center">
   <picture>
@@ -24,6 +25,7 @@ This project contains a backend, frontend, and a docker container for MongoDB.
 Docker is reccomended for this application, otherwise please download MongoDB 
 <br>
 and modify the connection string in "backend/src/index.js" as needed
+<br>
 <br>
 
 ## Getting Started
