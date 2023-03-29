@@ -22,7 +22,7 @@ This repository contains a polling application created for the 2023 IGN Code Foo
 This project contains a backend, frontend, and a docker container for MongoDB.
 <br>
 <br>
-Docker is reccomended for this application, otherwise please download MongoDB 
+Docker is reccomended to run this application, otherwise please download MongoDB 
 <br>
 and modify the connection string in "backend/src/index.js" as needed
 <br>
@@ -32,7 +32,15 @@ and modify the connection string in "backend/src/index.js" as needed
 </div>
 
 ```zsh
-// run to install dependencies
+// run at root dir to start docker MongoDB container
+➜ ~ docker-compose up -d 
+```
+
+<br>
+
+
+```zsh
+// run within the respective dir to start backend || frontend to install dependencies
 ➜ ~ yarn 
 // or
 ➜ ~ npm install
@@ -45,11 +53,4 @@ and modify the connection string in "backend/src/index.js" as needed
 ➜ ~ yarn start
 // or
 ➜ ~ npm start
-```
-
-<br>
-
-```zsh
-// run at root dir to start docker MongoDB container
-➜ ~ docker-compose up -d 
 ```
