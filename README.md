@@ -17,10 +17,12 @@
 
 # IGN Code Foo 2023 Application
 
-This repository contains a polling application created for the 2023 IGN Code Foo programs' coding portion.
+This repository contains a polling application created for the 2023 IGN Code Foo program's coding 
 <br>
-This project contains a backend, frontend, and a docker container for MongoDB.
+portion and the Hisui Power Plant plan. To view the power plant plan navigate to the directory within Github.
 <br>
+<br>
+The project contains a backend, frontend, and a docker container for MongoDB.
 <br>
 Docker is reccomended to run this application, otherwise please download MongoDB 
 <br>
