@@ -8,8 +8,8 @@
 
 In order to theoretically figure out how many voltorbs are needed to fully power a village, we'll 
 need to figure out how much energy we need to produce first. 
-First off we'll find an estimate of how much energy will be needed to run the research laboratory. Since we don't 
-have any information on how much power is needed for researching pokemon or the square footage of the place, we'll have to base our 
+First we'll find an estimate of how much energy is needed to run the research laboratory. Since we don't 
+have any information on how much power is required for researching pokemon or the square footage of the place, we'll have to base our 
 estimates off of American laboratories. According to ESource, a solutions-based research, consulting, and data science firm, 
 American labs use 30 to 100 kilowatt-hours (kWh) of electricity and 75,000 to 800,000 Btu of natural gas per square foot each year
 ([link](https://esource.bizenergyadvisor.com/article/laboratories)). After converting 
